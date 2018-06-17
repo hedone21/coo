@@ -63,6 +63,8 @@ coo_class* coo_class_init(void)
 	clazz->base.constructor = coo_class_constructor;
 	clazz->base.destructor = coo_class_destructor;
 
+	clazz->base.constructor(clazz);
+
 	return clazz;
 
 OOM_ERROR:
@@ -74,8 +76,6 @@ coo_class* coo_class_new(void)
 	coo_class *clazz = coo_class_init();
 	if (!clazz)
 		return NULL;
-
-	clazz->base.constructor(clazz);
 
 	return clazz;
 }

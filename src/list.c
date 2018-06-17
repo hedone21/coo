@@ -722,6 +722,8 @@ coo_list* coo_list_init(void)
 	clazz->base.constructor = coo_list_constructor;
 	clazz->base.destructor = coo_list_destructor;
 
+	clazz->base.constructor(clazz);
+
 	return clazz;
 
 OOM_ERROR:
@@ -735,8 +737,6 @@ coo_list* coo_list_new()
 	clazz = coo_list_init();
 	if (!clazz)
 		return NULL;
-
-	clazz->base.constructor(clazz);
 
 	return clazz;
 }

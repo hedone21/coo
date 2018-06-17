@@ -26,9 +26,16 @@
 
 #define COO_CLASS			"coo_class"
 
+#define COO_CLASS_MEMBERS		COO_COMMON_MEMBERS
+
 typedef struct coo_class_ {
+	/*
+	 * coo_class is root class. Therefore, it does not have
+	 * parents.
+	 *
+	 */
 	void *parent;
-	COO_COMMON_MEMBERS;
+	COO_CLASS_MEMBERS;
 }coo_class;
 
 coo_class* 		coo_class_new(void);
