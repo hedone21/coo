@@ -28,13 +28,28 @@
 typedef struct coo_iter_ coo_iter;
 typedef struct coo_riter_ coo_riter;
 
-#define COO_ITER_MEMBERS		coo_iter *prev;				\
-					coo_iter *next;				\
-					void* (*get_value)(coo_iter* this);
+#define COO_ITER_INTERFACE		\
+		bool set_compare(void *this, void *compare);	\
+		bool set_free(void *this, void *free);		\
+		void set_data(void *this, int data_type, int data_size);
 
-#define COO_ITER_REVERSE_MEMBERS	coo_riter *next;			\
-					coo_riter *prev;			\
-					void* (*get_value)(coo_iter* this);
+#define COO_ITER_COMMONS		\
+		void* (*compare)(void *x, void *y);	\
+		void* (*free)(void *data);		\
+		int data_type;				\
+		int data_size;
+
+#define COO_ITER_MEMBERS		\
+		coo_iter *prev;				\
+		coo_iter *next;				\
+		void* (*value)(coo_iter* this);		\
+		void* data;
+
+#define COO_ITER_REVERSE_MEMBERS	\
+		coo_riter *next;			\
+		coo_riter *prev;			\
+		void* (*value)(coo_iter* this);		\
+		void* data;
 
 typedef struct coo_iter_ {
 	COO_ITER_MEMBERS;

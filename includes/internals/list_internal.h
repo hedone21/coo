@@ -26,10 +26,16 @@
 #include "coo_internal.h"
 #include "../coo/iterator.h"
 
+#define COO_LIST_NODE_COMMONS	COO_ITER_COMMONS			\
+				coo_iter *head;				\
+				int length;
+
+typedef struct coo_list_private_ {
+	COO_LIST_NODE_COMMONS;
+}coo_list_private;
+
 typedef struct coo_list_node_ {
 	COO_ITER_MEMBERS;
-
-	void *data;
 }coo_list_node;
 
 #endif

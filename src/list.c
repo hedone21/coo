@@ -30,7 +30,7 @@
 #include "../includes/internals/error.h"
 #include "../includes/internals/list_internal.h"
 
-static void* coo_list_node_get_value(coo_iter *iter)
+static void* coo_list_node_value(coo_iter *iter)
 {
 	coo_list_node *node;
 
@@ -58,7 +58,7 @@ static coo_list_node* __coo_list_node_init(void *this, void *val)
 
 	node->next = NULL;
 	node->prev = NULL;
-	node->get_value = coo_list_node_get_value;
+	node->value = coo_list_node_value;
 
 	node->data = val;
 
@@ -118,7 +118,7 @@ static int __coo_list_node_del(void *this, coo_iter *node, void **out)
 	}
 
 	if (out) {
-		*out = node->get_value(node);
+		*out = node->value(node);
 	}
 
 	free(node);
@@ -362,7 +362,7 @@ static int coo_list_remove(void *this, void *val)
 
 	while (iter != NULL) {
 		bool ret;
-		ret = __coo_list_compare(clazz, iter->get_value(iter), val);
+		ret = __coo_list_compare(clazz, iter->value(iter), val);
 		if (ret) {
 			__coo_list_node_del(clazz, iter, NULL);
 			deleted_nodes++;
@@ -640,7 +640,7 @@ static void coo_list_print(void *this)
 	iter = clazz->head;
 	
 	while (iter != NULL) {
-		data = iter->get_value(iter);
+		data = iter->value(iter);
 		iter = iter->next;
 
 		if (clazz->data_type |= (COO_INT | COO_LONG)) {

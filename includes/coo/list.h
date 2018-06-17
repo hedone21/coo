@@ -31,6 +31,8 @@
 
 #define COO_LIST 	"coo_list"
 
+typedef struct coo_list_node_ coo_list_node;
+
 #define COO_LIST_MEMBERS 	\
 		COO_COMMON_MEMBERS 					\
 		coo_iter* (*front)(void *this);				\
@@ -57,9 +59,10 @@
 									\
 		coo_iter *head;						\
 		int length;
-	
-typedef struct coo_list_node_ coo_list_node;
 
+#define COO_LIST_NODE_INTERFACE		\
+		COO_ITER_INTERFACE					\
+	
 typedef struct coo_list_ {
 	coo_class *parent;
 	COO_LIST_MEMBERS;
