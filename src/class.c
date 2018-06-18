@@ -32,8 +32,9 @@ static int coo_class_constructor(void *this)
 	coo_return_val_if_true(this == NULL, -1);
 
 	clazz = (coo_class*)this;
-	clazz->data_type = COO_INT;
-	clazz->free = NULL;
+	clazz->set_compare = set_compare;
+	clazz->set_free = set_free;
+	clazz->set_data = set_data;
 
 	return COO_OKAY;
 }

@@ -20,30 +20,43 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COO_COMMONS_H
-#define COO_COMMONS_H
+#include "../includes/coo/class.h"
+#include "../includes/coo/iterator.h"
+#include "../includes/internals/error.h"
 
-#include <stdlib.h>
-#include <stdint.h>
-#include "iterator.h"
+bool set_compare(void *this, void *compare)
+{
+	coo_class *clazz;
 
-typedef enum coo_type_ {
-	COO_INT = 0,
-	COO_LONG,
-	COO_CHAR,
-	COO_STRING,
-	COO_CUSTOM,
-	COO_TYPE_UNKNOWN,
-	COO_TYPE_CNT,
-}coo_type;
+	coo_return_val_if_true(this == NULL || compare == NULL, false);
 
-#define COO_COMMON_MEMBERS		coo_base base;			\
-					COO_ITER_INTERFACE;
+	clazz = (coo_class*)this;
+	clazz->compare = compare;
 
-typedef struct coo_base_ {
-	int (*constructor)(void *clazz);
-	int (*destructor)(void *clazz);
-	const char *class_type;
-}coo_base;
+	return true;
+}
 
-#endif
+bool set_free(void *this, void *free)
+{
+	coo_class *clazz;
+
+	coo_return_val_if_true(this == NULL || free == NULL, false);
+
+	clazz = (coo_class*)this;
+	clazz->free = free;
+
+	return true;
+}
+
+void set_data(void *this, int data_type, int data_size)
+{
+	coo_class *clazz;
+
+	coo_return_if_true(this == NULL);
+	coo_return_if_true(data_type >= COO_TYPE_UNKNOWN);
+	coo_return_if_true(data_size < data_size);
+
+	clazz = (coo_class*)this;
+	clazz->data_type = data_type;
+	clazz->data_size  = data_size;
+}

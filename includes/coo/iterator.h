@@ -23,40 +23,45 @@
 #ifndef COO_ITERATOR_H
 #define COO_ITERATOR_H
 
+#include <stdbool.h>
 #include "commons.h"
 
 typedef struct coo_iter_ coo_iter;
 typedef struct coo_riter_ coo_riter;
 
 #define COO_ITER_INTERFACE		\
-		bool set_compare(void *this, void *compare);	\
-		bool set_free(void *this, void *free);		\
-		void set_data(void *this, int data_type, int data_size);
+		bool (*set_compare)(void *this, void *compare);	\
+		bool (*set_free)(void *this, void *free);		\
+		void (*set_data)(void *this, int data_type, int data_size);
 
-#define COO_ITER_COMMONS		\
+#define COO_ITER_MEMBERS		\
 		void* (*compare)(void *x, void *y);	\
 		void* (*free)(void *data);		\
 		int data_type;				\
 		int data_size;
 
-#define COO_ITER_MEMBERS		\
+#define COO_ITER		\
 		coo_iter *prev;				\
 		coo_iter *next;				\
 		void* (*value)(coo_iter* this);		\
 		void* data;
 
-#define COO_ITER_REVERSE_MEMBERS	\
+#define COO_ITER_REVERSE	\
 		coo_riter *next;			\
 		coo_riter *prev;			\
 		void* (*value)(coo_iter* this);		\
 		void* data;
 
 typedef struct coo_iter_ {
-	COO_ITER_MEMBERS;
+	COO_ITER;
 }coo_iter;
 
 typedef struct coo_riter_ {
-	COO_ITER_REVERSE_MEMBERS;
+	COO_ITER_REVERSE;
 }coo_riter;
+
+bool set_compare(void *this, void *compare);
+bool set_free(void *this, void *free);
+void set_data(void *this, int data_type, int data_size);
 
 #endif
