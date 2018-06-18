@@ -26,7 +26,8 @@
 
 #define COO_CLASS			"coo_class"
 
-#define COO_CLASS_MEMBERS		COO_COMMON_MEMBERS
+#define COO_CLASS_MEMBERS		COO_COMMON_MEMBERS;		\
+					COO_ITER_MEMBERS;
 
 typedef struct coo_class_ {
 	/*
