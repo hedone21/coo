@@ -23,6 +23,11 @@ add_library(coo SHARED src/class.c src/coo.c src/iter.c src/list.c)
 
 # Headert
 set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/coo.h)
+set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/public/class.h)
+set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/public/commons.h)
+set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/public/iterator.h)
+set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/public/list.h)
+set_target_properties(coo PROPERTIES PUBLIC_HEADER includes/public/type.h)
 target_include_directories(coo PRIVATE includes)
 
 install (TARGETS coo LIBRARY DESTINATION /usr PUBLIC_HEADER DESTINATION /usr/include/coo)
