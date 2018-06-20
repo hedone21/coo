@@ -24,11 +24,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
-#include "../includes/coo/list.h"
-#include "../includes/coo/iterator.h"
-#include "../includes/internals/debug.h"
-#include "../includes/internals/error.h"
-#include "../includes/internals/list_internal.h"
+#include "coo/list.h"
+#include "coo/iterator.h"
+#include "internals/debug.h"
+#include "internals/error.h"
+#include "internals/list_internal.h"
 
 static void* coo_list_node_value(coo_iter *iter)
 {

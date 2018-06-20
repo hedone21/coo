@@ -21,8 +21,8 @@
 */
 
 #include <stdlib.h>
-#include "../includes/coo/coo.h"
-#include "../includes/coo/class.h"
+#include "coo/coo.h"
+#include "coo/class.h"
 
 void coo_delete(void *clazz)
 {
