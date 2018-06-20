@@ -20,10 +20,10 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "coo/class.h"
-#include "internals/debug.h"
-#include "internals/coo_internal.h"
-#include "internals/error.h"
+#include "public/class.h"
+#include "private/debug.h"
+#include "private/coo.h"
+#include "private/error.h"
 
 static int coo_class_constructor(void *this)
 {

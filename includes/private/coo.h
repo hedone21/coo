@@ -20,14 +20,16 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COO_LIST_INTERNAL_H
-#define COO_LIST_INTERNAL_H
+#ifndef COO_INTERNAL_H
+#define COO_INTERNAL_H
 
-#include "coo_internal.h"
-#include "../coo/iterator.h"
+#include "../public/commons.h"
+#include "../public/list.h"
 
-typedef struct coo_list_node_ {
-	COO_ITER;
-}coo_list_node;
+#define coo_init(x)	x##_init()
+#define coo_exit(x)	x##_exit()
+
+coo_class* 	coo_class_init(void);
+coo_list* 	coo_list_init(void);
 
 #endif
