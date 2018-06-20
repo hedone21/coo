@@ -20,14 +20,14 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COO_LIST_INTERNAL_H
-#define COO_LIST_INTERNAL_H
+#ifndef COO_H
+#define COO_H
 
-#include "coo_internal.h"
-#include "../coo/iterator.h"
+#include <stdarg.h>
+#include "public/commons.h"
+#include "public/list.h"
 
-typedef struct coo_list_node_ {
-	COO_ITER;
-}coo_list_node;
+#define coo_new(clazz) 		clazz##_new()
+void 	coo_delete(void *clazz);
 
 #endif

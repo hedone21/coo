@@ -20,14 +20,16 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COO_H
-#define COO_H
+#ifndef COO_INTERNAL_H
+#define COO_INTERNAL_H
 
-#include <stdarg.h>
-#include "commons.h"
-#include "list.h"
+#include "../public/commons.h"
+#include "../public/list.h"
 
-#define coo_new(clazz) 		clazz##_new()
-void 	coo_delete(void *clazz);
+#define coo_init(x)	x##_init()
+#define coo_exit(x)	x##_exit()
+
+coo_class* 	coo_class_init(void);
+coo_list* 	coo_list_init(void);
 
 #endif

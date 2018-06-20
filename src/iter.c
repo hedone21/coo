@@ -20,9 +20,9 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "coo/class.h"
-#include "coo/iterator.h"
-#include "internals/error.h"
+#include "public/class.h"
+#include "public/iterator.h"
+#include "private/error.h"
 
 bool set_compare(void *this, void *compare)
 {
