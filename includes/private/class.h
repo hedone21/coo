@@ -1,5 +1,4 @@
-/*
-* Copyright (c) 2018 Minyoung Go <hedone21@gmail.com>
+/* * Copyright (c) 2018 Minyoung Go <hedone21@gmail.com>
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -20,44 +19,13 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "public/class.h"
-#include "public/iterator.h"
-#include "private/class.h"
-#include "private/error.h"
+#ifndef COO_CLASS_PRIVATE_H
+#define COO_CLASS_PRIVATE_H
 
-bool set_compare(void *this, void *compare)
-{
-	coo_class *clazz;
+#define COO_CLASS_PRIVATE		COO_ITER_MEMBERS;
 
-	coo_return_val_if_true(this == NULL || compare == NULL, false);
+typedef struct coo_class_private_ {
+	COO_CLASS_PRIVATE;
+}coo_class_private;
 
-	clazz = (coo_class*)this;
-	clazz->private->compare = compare;
-
-	return true;
-}
-
-bool set_free(void *this, void *free)
-{
-	coo_class *clazz;
-
-	coo_return_val_if_true(this == NULL || free == NULL, false);
-
-	clazz = (coo_class*)this;
-	clazz->private->free = free;
-
-	return true;
-}
-
-void set_data(void *this, int data_type, int data_size)
-{
-	coo_class *clazz;
-
-	coo_return_if_true(this == NULL);
-	coo_return_if_true(data_type >= COO_TYPE_UNKNOWN);
-	coo_return_if_true(data_size < data_size);
-
-	clazz = (coo_class*)this;
-	clazz->private->data_type = data_type;
-	clazz->private->data_size = data_size;
-}
+#endif

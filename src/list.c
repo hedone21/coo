@@ -28,9 +28,14 @@
 #include "public/list.h"
 #include "public/iterator.h"
 #include "private/coo.h"
+#include "private/base.h"
+#include "private/class.h"
 #include "private/debug.h"
 #include "private/error.h"
 #include "private/list.h"
+
+static int coo_list_constructor(void *this);
+static int coo_list_destructor(void *this);
 
 static void* coo_list_node_value(coo_iter *iter)
 {
@@ -115,8 +120,8 @@ static int __coo_list_node_del(void *this, coo_iter *node, void **out)
 	if (node->next)
 		node->next->prev = node->prev;
 
-	if (clazz->head == node) {
-		clazz->head = node->next;
+	if (clazz->private->head == node) {
+		clazz->private->head = node->next;
 	}
 
 	if (out) {
@@ -126,9 +131,9 @@ static int __coo_list_node_del(void *this, coo_iter *node, void **out)
 	free(node);
 	node = NULL;
 
-	clazz->length -= 1;
-	if (clazz->length < 0) {
-		clazz->length = 0;
+	clazz->private->length -= 1;
+	if (clazz->private->length < 0) {
+		clazz->private->length = 0;
 	}
 
 	return 0;
@@ -207,7 +212,7 @@ coo_iter* coo_list_front(void *this)
 
 	clazz = (coo_list*)this;
 
-	return clazz->head;
+	return clazz->private->head;
 }
 
 coo_iter* coo_list_back(void *this)
@@ -218,7 +223,7 @@ coo_iter* coo_list_back(void *this)
 	coo_return_val_if_true(this == NULL, NULL);
 
 	clazz = (coo_list*)this;
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	coo_return_val_if_true(iter == NULL, NULL);
 
@@ -237,7 +242,7 @@ coo_riter* coo_list_rfront(void *this)
 	coo_return_val_if_true(this == NULL, NULL);
 
 	clazz = (coo_list*)this;
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	coo_return_val_if_true(iter == NULL, NULL);
 
@@ -256,7 +261,7 @@ coo_riter* coo_list_rback(void *this)
 
 	clazz = (coo_list*)this;
 
-	return (coo_riter*)clazz->head;
+	return (coo_riter*)clazz->private->head;
 }
 
 static void coo_list_insert(void *this, int pos, void *val)
@@ -277,18 +282,18 @@ static void coo_list_insert(void *this, int pos, void *val)
 
 	node = __coo_list_node_init(this, val);
 
-	if (clazz->head == NULL || abs_pos == 0) {
+	if (clazz->private->head == NULL || abs_pos == 0) {
 		node->prev = NULL;
-		node->next = clazz->head;
-		if (clazz->head) {
-			clazz->head->prev = (coo_iter*)node;
+		node->next = clazz->private->head;
+		if (clazz->private->head) {
+			clazz->private->head->prev = (coo_iter*)node;
 		}
-		clazz->head = (coo_iter*)node;
+		clazz->private->head = (coo_iter*)node;
 
 		goto OUT;
 	}
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 	for (int i = 1; i < abs_pos; i++) {
 		if (iter->next == NULL) {
 			node->prev = iter;
@@ -311,7 +316,7 @@ static void coo_list_insert(void *this, int pos, void *val)
 	iter->next = (coo_iter*)node;
 
 OUT:
-	clazz->length += 1;
+	clazz->private->length += 1;
 	return;
 }
 
@@ -330,7 +335,7 @@ static int coo_list_get(void *this, int pos, void **out)
 
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	for (int i = 0; i < abs_pos; i++) {
 		if (iter == NULL) {
@@ -360,7 +365,7 @@ static int coo_list_remove(void *this, void *val)
 	coo_return_val_if_true(val == NULL, -1);
 
 	clazz = (coo_list*)this;
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	while (iter != NULL) {
 		bool ret;
@@ -390,7 +395,7 @@ static int coo_list_replace(void *this, int pos, void *val)
 	
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	for (int i = 0; i < abs_pos; i++) {
 		coo_return_val_if_true(iter == NULL, -1);
@@ -417,7 +422,7 @@ static bool coo_list_erase(void *this, int pos, void **out)
 	
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	for (int i = 0; i < abs_pos; i++) {
 		coo_return_val_if_true(iter == NULL, false);
@@ -444,7 +449,7 @@ static bool coo_list_erase_bt(void *this, int from, int to)
 	coo_return_val_if_true(to < 0, false);
 	coo_return_val_if_true(from > to, false);
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 
 	for (int i = 0; i < to; i++) {
 		coo_return_val_if_true(iter == NULL, false);
@@ -511,7 +516,7 @@ static int coo_list_size(void *this)
 
 	clazz = (coo_list*)this;
 
-	return clazz->length;
+	return clazz->private->length;
 }
 
 static void coo_list_reverse(void *this)
@@ -603,7 +608,7 @@ static void coo_list_sort(void *this)
 
 	clazz = (coo_list*)this;
 
-	coo_return_if_true(clazz->head == NULL);
+	coo_return_if_true(clazz->private->head == NULL);
 
 	first = 0;
 	last = clazz->size(clazz) - 1;
@@ -619,7 +624,7 @@ static void coo_list_clear(void *this)
 
 	clazz = (coo_list*)this;
 
-	coo_return_if_true(clazz->head == NULL);
+	coo_return_if_true(clazz->private->head == NULL);
 
 	while (!clazz->is_empty(clazz)) {
 		clazz->pop_front(clazz, NULL);
@@ -639,15 +644,15 @@ static void coo_list_print(void *this)
 	printf("[%s]\n", __func__);
 	printf("Size: %d\n", clazz->size(clazz));
 
-	iter = clazz->head;
+	iter = clazz->private->head;
 	
 	while (iter != NULL) {
 		data = iter->value(iter);
 		iter = iter->next;
 
-		if (clazz->data_type |= (COO_INT | COO_LONG)) {
+		if (clazz->private->data_type |= (COO_INT | COO_LONG)) {
 			printf("%lu ", (long)data);
-		}else if (clazz->data_type |= COO_CHAR) {
+		}else if (clazz->private->data_type |= COO_CHAR) {
 			printf("%c ", (char)data);
 		}
 	}
@@ -663,39 +668,40 @@ static bool coo_list_is_empty(void *this)
 
 	clazz = (coo_list*)this;
 
-	return !clazz->length;
+	return !clazz->private->length;
 }
 
-static int coo_list_constructor(void *clazz)
+static int coo_list_constructor(void *this)
 {
-	coo_list *this = (coo_list*)clazz;
-	if (this->parent)
-		this->parent->base.constructor((void*)this);
+	coo_list *clazz = (coo_list*)this;
+	if (clazz->parent)
+		clazz->parent->base->constructor((void*)clazz->parent);
 
-	this->front = coo_list_front;
-	this->back = coo_list_back;
-	this->rfront = coo_list_rfront;
-	this->rback = coo_list_rback;
-	this->insert = coo_list_insert;
-	this->get = coo_list_get;
-	this->remove = coo_list_remove;
-	this->replace = coo_list_replace;
-	this->erase = coo_list_erase;
-	this->erase_bt = coo_list_erase_bt;
-	this->push_front = coo_list_push_front;
-	this->pop_front = coo_list_pop_front;
-	this->push_back = coo_list_push_back;
-	this->pop_back = coo_list_pop_back;
-	this->size = coo_list_size;
-	this->reverse = coo_list_reverse;
-	this->merge = coo_list_merge;
-	this->sort = coo_list_sort;
-	this->clear = coo_list_clear;
-	this->print = coo_list_print;
-	this->is_empty = coo_list_is_empty;
+	clazz->front = coo_list_front;
+	clazz->back = coo_list_back;
+	clazz->rfront = coo_list_rfront;
+	clazz->rback = coo_list_rback;
+	clazz->insert = coo_list_insert;
+	clazz->get = coo_list_get;
+	clazz->remove = coo_list_remove;
+	clazz->replace = coo_list_replace;
+	clazz->erase = coo_list_erase;
+	clazz->erase_bt = coo_list_erase_bt;
+	clazz->push_front = coo_list_push_front;
+	clazz->pop_front = coo_list_pop_front;
+	clazz->push_back = coo_list_push_back;
+	clazz->pop_back = coo_list_pop_back;
+	clazz->size = coo_list_size;
+	clazz->reverse = coo_list_reverse;
+	clazz->merge = coo_list_merge;
+	clazz->sort = coo_list_sort;
+	clazz->clear = coo_list_clear;
+	clazz->print = coo_list_print;
+	clazz->is_empty = coo_list_is_empty;
 
-	this->head = NULL;
-	this->length = 0;
+	clazz->private = (coo_list_private*)malloc(sizeof(coo_list_private));
+	clazz->private->head = NULL;
+	clazz->private->length = 0;
 
 	return COO_OKAY;
 }
@@ -705,7 +711,13 @@ static int coo_list_destructor(void *this)
 	coo_list *clazz = (coo_list*)this;
 
 	if (clazz->parent)
-		clazz->parent->base.destructor((void*)clazz->parent);
+		clazz->parent->base->destructor((void*)clazz->parent);
+
+	clazz->clear(clazz);
+
+	free(clazz->base);
+	free(clazz->private);
+	free(clazz);
 
 	return COO_OKAY;
 }
@@ -720,11 +732,10 @@ coo_list* coo_list_init(void)
 	if (!clazz->parent)
 		goto OOM_ERROR;
 
-	clazz->base.class_type = COO_LIST;
-	clazz->base.constructor = coo_list_constructor;
-	clazz->base.destructor = coo_list_destructor;
-
-	clazz->base.constructor(clazz);
+	clazz->base = (coo_base*)malloc(sizeof(coo_base));
+	clazz->base->class_type = COO_LIST;
+	clazz->base->constructor = coo_list_constructor;
+	clazz->base->destructor = coo_list_destructor;
 
 	return clazz;
 
@@ -739,6 +750,8 @@ coo_list* coo_list_new()
 	clazz = coo_list_init();
 	if (!clazz)
 		return NULL;
+
+	clazz->base->constructor(clazz);
 
 	return clazz;
 }
