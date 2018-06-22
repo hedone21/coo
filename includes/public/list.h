@@ -31,10 +31,10 @@
 
 #define COO_LIST 	"coo_list"
 
-typedef struct coo_list_node_ coo_list_node;
+typedef struct coo_list_private_ coo_list_private;
 
-#define COO_LIST_MEMBERS 	\
-		COO_CLASS_MEMBERS 					\
+#define COO_LIST_PUBLIC 	\
+		COO_CLASS_PUBLIC; 					\
 		coo_iter* (*front)(void *this);				\
 		coo_iter* (*back)(void *this);				\
 		coo_riter* (*rfront)(void *this);			\
@@ -55,14 +55,12 @@ typedef struct coo_list_node_ coo_list_node;
 		void (*sort)(void *this);				\
 		void (*clear)(void *this);				\
 		void (*print)(void *this);				\
-		bool (*is_empty)(void *this);				\
-									\
-		coo_iter *head;						\
-		int length;
+		bool (*is_empty)(void *this);
 
 typedef struct coo_list_ {
 	coo_class *parent;
-	COO_LIST_MEMBERS;
+	COO_LIST_PUBLIC;
+	coo_list_private *private;
 }coo_list;
 
 coo_list* 	coo_list_new();

@@ -19,27 +19,19 @@
 * OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COO_CLASS_H
-#define COO_CLASS_H
+#ifndef COO_CLASS_PRIVATE_H
+#define COO_CLASS_PRIVATE_H
 
-#include "commons.h"
+#define COO_CLASS_PRIVATE		coo_base base;
 
-#define COO_CLASS			"coo_class"
+typedef struct coo_base_ {
+	int (*constructor)(void *clazz);
+	int (*destructor)(void *clazz);
+	const char *class_type;
+}coo_base;
 
-#define COO_CLASS_PUBLIC		COO_ITER_MEMBERS;
-
-typedef struct coo_class_private_ coo_class_private;
-
-typedef struct coo_class_ {
-	/*
-	 * coo_class is root class. Therefore, it does not have parents.
-	 *
-	 */
-	void *parent;
-	COO_CLASS_PUBLIC;
-	coo_class_private *private;
-}coo_class;
-
-coo_class* 		coo_class_new(void);
+typedef struct coo_class_private_ {
+	COO_CLASS_PRIVATE;
+}coo_class_private;
 
 #endif

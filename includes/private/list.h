@@ -25,9 +25,21 @@
 
 #include "../coo.h"
 #include "../public/iterator.h"
+#include "class.h"
+
+#define COO_LIST_PRIVATE 	\
+		COO_CLASS_PRIVATE;					\
+									\
+		coo_iter *head;						\
+		int length;
+		
 
 typedef struct coo_list_node_ {
 	COO_ITER;
 }coo_list_node;
+
+typedef struct coo_list_private_ {
+	COO_LIST_PRIVATE;
+}coo_list_private;
 
 #endif

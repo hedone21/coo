@@ -37,13 +37,4 @@ typedef enum coo_type_ {
 	COO_TYPE_CNT,
 }coo_type;
 
-#define COO_COMMON_MEMBERS		coo_base base;			\
-					COO_ITER_INTERFACE;
-
-typedef struct coo_base_ {
-	int (*constructor)(void *clazz);
-	int (*destructor)(void *clazz);
-	const char *class_type;
-}coo_base;
-
 #endif

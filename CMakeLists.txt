@@ -31,5 +31,5 @@ set(PUBLIC_HEADERS
 	includes/public/type.h
 	)
 
-install (TARGETS coo LIBRARY DESTINATION /usr PUBLIC_HEADER DESTINATION /usr/include/coo)
+install (TARGETS coo LIBRARY DESTINATION /usr/lib PUBLIC_HEADER DESTINATION /usr/include/coo)
 install (FILES ${PUBLIC_HEADERS} DESTINATION /usr/include/coo/public)
