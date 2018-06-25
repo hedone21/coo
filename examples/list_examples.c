@@ -22,7 +22,8 @@
 
 #include <stdio.h>
 #include <coo/coo.h>
-// #include "../src/include/coo.h"
+
+
 
 int main(void)
 {
@@ -32,91 +33,91 @@ int main(void)
 
 	/* Test push_front */
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	/* Test pop_front */
 	list->pop_front(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_front(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_front(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_front(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	/* Test push_back */
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	/* Test pop_back */
 	list->pop_back(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_back(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_back(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	list->pop_back(list, &out);
-	list->print(list);
+	list->debug(list);
 	printf("Out: %d\n", out);
 
 	/* Test clear */
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_back(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->push_front(list, val++);
-	list->print(list);
+	list->debug(list);
 
 	list->sort(list);
-	list->print(list);
+	list->debug(list);
 
 	list->clear(list);
-	list->print(list);
+	list->debug(list);
 
 	coo_delete(list);
 
