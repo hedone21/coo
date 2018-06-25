@@ -55,7 +55,8 @@ typedef struct coo_list_private_ coo_list_private;
 		void (*merge)(void *this, void *list);			\
 		void (*sort)(void *this);				\
 		void (*clear)(void *this);				\
-		void (*print)(void *this);				\
+		void (*print)(void *this, char *buf, int size);		\
+		void (*debug)(void *this);				\
 		bool (*is_empty)(void *this);
 
 typedef struct coo_list_ {
