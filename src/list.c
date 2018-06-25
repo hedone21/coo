@@ -34,6 +34,8 @@
 #include "private/error.h"
 #include "private/list.h"
 
+#define BUF_LEN	1024
+
 static int coo_list_constructor(void *this);
 static int coo_list_destructor(void *this);
 
@@ -631,7 +633,37 @@ static void coo_list_clear(void *this)
 	}
 }
 
-static void coo_list_print(void *this)
+static void coo_list_print(void *this, char *buf, int size)
+{
+	coo_list *clazz;
+	coo_iter *iter;
+	void *data;
+	char buffer[BUF_LEN];
+
+	coo_return_if_true(this == NULL);
+
+	clazz = (coo_list*)this;
+	
+	snprintf(buffer, BUF_LEN, "Size: %d\n", clazz->size(clazz));
+	strncat(buf, buffer, size);
+
+	iter = clazz->private->head;
+	
+	while (iter != NULL) {
+		data = iter->value(iter);
+		iter = iter->next;
+
+		if (clazz->private->data_type |= (COO_INT | COO_LONG)) {
+			snprintf(buffer, BUF_LEN, "%lu ", (long)data);
+			strncat(buf, buffer, size);
+		}else if (clazz->private->data_type |= COO_CHAR) {
+			snprintf(buffer, BUF_LEN, "%c ", (char)data);
+			strncat(buf, buffer, size);
+		}
+	}
+}
+
+static void coo_list_debug(void *this)
 {
 	coo_list *clazz;
 	coo_iter *iter;
@@ -641,7 +673,7 @@ static void coo_list_print(void *this)
 
 	clazz = (coo_list*)this;
 
-	printf("[%s]\n", __func__);
+	printf("--------------------------------\n");
 	printf("Size: %d\n", clazz->size(clazz));
 
 	iter = clazz->private->head;
@@ -697,6 +729,10 @@ static int coo_list_constructor(void *this)
 	clazz->sort = coo_list_sort;
 	clazz->clear = coo_list_clear;
 	clazz->print = coo_list_print;
+<<<<<<< HEAD
+=======
+	clazz->debug = coo_list_debug;
+>>>>>>> dev
 	clazz->is_empty = coo_list_is_empty;
 
 	clazz->private = (coo_list_private*)malloc(sizeof(coo_list_private));
