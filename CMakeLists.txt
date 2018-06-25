@@ -7,6 +7,9 @@ project(coo LANGUAGES C)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 
+# Debug info
+set(CMAKE_BUILD_TYPE Debug)
+
 configure_file(
 	"config.h.in"
 	"includes/coo_config.h"

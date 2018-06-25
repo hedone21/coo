@@ -26,11 +26,16 @@
 
 #define COO_CLASS			"coo_class"
 
-#define COO_CLASS_PUBLIC		COO_ITER_MEMBERS;
+#define COO_CLASS_PUBLIC		COO_ITER_INTERFACE;
 
+typedef struct coo_base_ coo_base;
 typedef struct coo_class_private_ coo_class_private;
 
 typedef struct coo_class_ {
+	/* 
+	 * coo_base must be the first member of class.
+	 */
+	coo_base *base;
 	/*
 	 * coo_class is root class. Therefore, it does not have parents.
 	 *
@@ -40,6 +45,7 @@ typedef struct coo_class_ {
 	coo_class_private *private;
 }coo_class;
 
-coo_class* 		coo_class_new(void);
+coo_class* 	coo_class_new(void);
+coo_class*	coo_class_init(void);
 
 #endif

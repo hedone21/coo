@@ -22,13 +22,7 @@
 #ifndef COO_CLASS_PRIVATE_H
 #define COO_CLASS_PRIVATE_H
 
-#define COO_CLASS_PRIVATE		coo_base base;
-
-typedef struct coo_base_ {
-	int (*constructor)(void *clazz);
-	int (*destructor)(void *clazz);
-	const char *class_type;
-}coo_base;
+#define COO_CLASS_PRIVATE		COO_ITER_MEMBERS;
 
 typedef struct coo_class_private_ {
 	COO_CLASS_PRIVATE;

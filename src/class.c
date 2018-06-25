@@ -21,6 +21,8 @@
 */
 
 #include "public/class.h"
+#include "private/class.h"
+#include "private/base.h"
 #include "private/debug.h"
 #include "private/coo.h"
 #include "private/error.h"
@@ -36,6 +38,8 @@ static int coo_class_constructor(void *this)
 	clazz->set_free = set_free;
 	clazz->set_data = set_data;
 
+	clazz->private = (coo_class_private*)malloc(sizeof(coo_class_private));
+
 	return COO_OKAY;
 }
 
@@ -47,6 +51,8 @@ static int coo_class_destructor(void *this)
 
 	clazz = (coo_class*)this;
 
+	free(clazz->base);
+	free(clazz->private);
 	free(clazz);
 
 	return COO_OKAY;
@@ -60,11 +66,11 @@ coo_class* coo_class_init(void)
 		goto OOM_ERROR;
 
 	clazz->parent = NULL;
-	clazz->base.class_type = COO_CLASS;
-	clazz->base.constructor = coo_class_constructor;
-	clazz->base.destructor = coo_class_destructor;
 
-	clazz->base.constructor(clazz);
+	clazz->base = (coo_base*)malloc(sizeof(coo_base));
+	clazz->base->class_type = COO_CLASS;
+	clazz->base->constructor = coo_class_constructor;
+	clazz->base->destructor = coo_class_destructor;
 
 	return clazz;
 
@@ -77,6 +83,8 @@ coo_class* coo_class_new(void)
 	coo_class *clazz = coo_class_init();
 	if (!clazz)
 		return NULL;
+
+	clazz->base->constructor(clazz);
 
 	return clazz;
 }

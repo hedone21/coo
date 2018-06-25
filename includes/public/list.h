@@ -31,6 +31,7 @@
 
 #define COO_LIST 	"coo_list"
 
+typedef struct coo_base_ coo_base;
 typedef struct coo_list_private_ coo_list_private;
 
 #define COO_LIST_PUBLIC 	\
@@ -58,13 +59,13 @@ typedef struct coo_list_private_ coo_list_private;
 		bool (*is_empty)(void *this);
 
 typedef struct coo_list_ {
+	coo_base *base;
 	coo_class *parent;
 	COO_LIST_PUBLIC;
 	coo_list_private *private;
 }coo_list;
 
 coo_list* 	coo_list_new();
-coo_class*	coo_class_init(void);
 coo_list* 	coo_list_init(void);
 
 #endif

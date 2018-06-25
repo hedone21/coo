@@ -23,10 +23,13 @@
 #include <stdlib.h>
 #include "coo.h"
 #include "public/class.h"
+#include "private/base.h"
+#include "private/class.h"
+#include "private/list.h"
 
 void coo_delete(void *clazz)
 {
-	coo_base *base = &((coo_class*)clazz)->base;
+	coo_base *base = ((coo_class*)clazz)->base;
 	base->destructor(clazz);
 	if(clazz)
 		free(clazz);

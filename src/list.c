@@ -28,6 +28,7 @@
 #include "public/list.h"
 #include "public/iterator.h"
 #include "private/coo.h"
+#include "private/base.h"
 #include "private/class.h"
 #include "private/debug.h"
 #include "private/error.h"
@@ -649,9 +650,9 @@ static void coo_list_print(void *this)
 		data = iter->value(iter);
 		iter = iter->next;
 
-		if (clazz->data_type |= (COO_INT | COO_LONG)) {
+		if (clazz->private->data_type |= (COO_INT | COO_LONG)) {
 			printf("%lu ", (long)data);
-		}else if (clazz->data_type |= COO_CHAR) {
+		}else if (clazz->private->data_type |= COO_CHAR) {
 			printf("%c ", (char)data);
 		}
 	}
@@ -674,7 +675,7 @@ static int coo_list_constructor(void *this)
 {
 	coo_list *clazz = (coo_list*)this;
 	if (clazz->parent)
-		clazz->parent->private->base.constructor((void*)clazz);
+		clazz->parent->base->constructor((void*)clazz->parent);
 
 	clazz->front = coo_list_front;
 	clazz->back = coo_list_back;
@@ -699,10 +700,6 @@ static int coo_list_constructor(void *this)
 	clazz->is_empty = coo_list_is_empty;
 
 	clazz->private = (coo_list_private*)malloc(sizeof(coo_list_private));
-	clazz->private->base.class_type = COO_LIST;
-	clazz->private->base.constructor = coo_list_constructor;
-	clazz->private->base.destructor = coo_list_destructor;
-
 	clazz->private->head = NULL;
 	clazz->private->length = 0;
 
@@ -714,7 +711,13 @@ static int coo_list_destructor(void *this)
 	coo_list *clazz = (coo_list*)this;
 
 	if (clazz->parent)
-		clazz->parent->private->base.destructor((void*)clazz->parent);
+		clazz->parent->base->destructor((void*)clazz->parent);
+
+	clazz->clear(clazz);
+
+	free(clazz->base);
+	free(clazz->private);
+	free(clazz);
 
 	return COO_OKAY;
 }
@@ -729,7 +732,10 @@ coo_list* coo_list_init(void)
 	if (!clazz->parent)
 		goto OOM_ERROR;
 
-	clazz->private->base.constructor(clazz);
+	clazz->base = (coo_base*)malloc(sizeof(coo_base));
+	clazz->base->class_type = COO_LIST;
+	clazz->base->constructor = coo_list_constructor;
+	clazz->base->destructor = coo_list_destructor;
 
 	return clazz;
 
@@ -744,6 +750,8 @@ coo_list* coo_list_new()
 	clazz = coo_list_init();
 	if (!clazz)
 		return NULL;
+
+	clazz->base->constructor(clazz);
 
 	return clazz;
 }
