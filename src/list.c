@@ -271,7 +271,6 @@ static void coo_list_insert(void *this, int pos, void *val)
 	coo_list *clazz;
 	coo_list_node *node;
 	coo_iter *iter;
-	coo_iter *iter_next;
 	int abs_pos;
 
 	coo_return_if_true(this == NULL);
@@ -284,37 +283,15 @@ static void coo_list_insert(void *this, int pos, void *val)
 
 	node = __coo_list_node_init(this, val);
 
-	if (clazz->private->head == NULL || abs_pos == 0) {
-		node->prev = NULL;
-		node->next = clazz->private->head;
-		if (clazz->private->head) {
-			clazz->private->head->prev = (coo_iter*)node;
-		}
-		clazz->private->head = (coo_iter*)node;
-
-		goto OUT;
-	}
-
 	iter = clazz->private->head;
-	for (int i = 1; i < abs_pos; i++) {
-		if (iter->next == NULL) {
-			node->prev = iter;
-			node->next = NULL;
-			iter->next = (coo_iter*)node;
-
-			goto OUT;
-		}
-
+	for (int i = 0; i < abs_pos || iter->next != NULL; i++) {
 		iter = iter->next;
 	}
 
-	iter_next = iter->next;
-	if (iter->next) {
-		iter_next->prev = (coo_iter*)node;
-	}
-
 	node->prev = iter;
-	node->next = iter_next;
+	node->next = iter->next;
+	if (iter->next)
+		iter->next->prev = node;
 	iter->next = (coo_iter*)node;
 
 OUT:
@@ -367,7 +344,7 @@ static int coo_list_remove(void *this, void *val)
 	coo_return_val_if_true(val == NULL, -1);
 
 	clazz = (coo_list*)this;
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	while (iter != NULL) {
 		bool ret;
@@ -397,7 +374,7 @@ static int coo_list_replace(void *this, int pos, void *val)
 	
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	for (int i = 0; i < abs_pos; i++) {
 		coo_return_val_if_true(iter == NULL, -1);
@@ -424,7 +401,7 @@ static bool coo_list_erase(void *this, int pos, void **out)
 	
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	for (int i = 0; i < abs_pos; i++) {
 		coo_return_val_if_true(iter == NULL, false);
@@ -647,7 +624,7 @@ static void coo_list_print(void *this, char *buf, int size)
 	snprintf(buffer, BUF_LEN, "Size: %d\n", clazz->size(clazz));
 	strncat(buf, buffer, size);
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 	
 	while (iter != NULL) {
 		data = iter->value(iter);
@@ -676,7 +653,7 @@ static void coo_list_debug(void *this)
 	printf("--------------------------------\n");
 	printf("Size: %d\n", clazz->size(clazz));
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 	
 	while (iter != NULL) {
 		data = iter->value(iter);
@@ -733,7 +710,7 @@ static int coo_list_constructor(void *this)
 	clazz->is_empty = coo_list_is_empty;
 
 	clazz->private = (coo_list_private*)malloc(sizeof(coo_list_private));
-	clazz->private->head = NULL;
+	clazz->private->head = __coo_list_node_init(clazz, (void*)0);
 	clazz->private->length = 0;
 
 	return COO_OKAY;
@@ -746,6 +723,7 @@ static int coo_list_destructor(void *this)
 	if (clazz->parent)
 		clazz->parent->base->destructor((void*)clazz->parent);
 
+	__coo_list_node_del(clazz, clazz->private->head, NULL);
 	clazz->clear(clazz);
 
 	free(clazz->base);
