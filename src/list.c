@@ -122,10 +122,6 @@ static int __coo_list_node_del(void *this, coo_iter *node, void **out)
 	if (node->next)
 		node->next->prev = node->prev;
 
-	if (clazz->private->head == node) {
-		clazz->private->head = node->next;
-	}
-
 	if (out) {
 		*out = node->value(node);
 	}
@@ -214,7 +210,7 @@ coo_iter* coo_list_front(void *this)
 
 	clazz = (coo_list*)this;
 
-	return clazz->private->head;
+	return clazz->private->head->next;
 }
 
 coo_iter* coo_list_back(void *this)
@@ -225,7 +221,7 @@ coo_iter* coo_list_back(void *this)
 	coo_return_val_if_true(this == NULL, NULL);
 
 	clazz = (coo_list*)this;
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	coo_return_val_if_true(iter == NULL, NULL);
 
@@ -244,7 +240,7 @@ coo_riter* coo_list_rfront(void *this)
 	coo_return_val_if_true(this == NULL, NULL);
 
 	clazz = (coo_list*)this;
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	coo_return_val_if_true(iter == NULL, NULL);
 
@@ -263,7 +259,7 @@ coo_riter* coo_list_rback(void *this)
 
 	clazz = (coo_list*)this;
 
-	return (coo_riter*)clazz->private->head;
+	return (coo_riter*)clazz->private->head->next;
 }
 
 static void coo_list_insert(void *this, int pos, void *val)
@@ -314,7 +310,7 @@ static int coo_list_get(void *this, int pos, void **out)
 
 	coo_return_val_if_true(abs_pos < 0, -1);
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	for (int i = 0; i < abs_pos; i++) {
 		if (iter == NULL) {
@@ -428,7 +424,7 @@ static bool coo_list_erase_bt(void *this, int from, int to)
 	coo_return_val_if_true(to < 0, false);
 	coo_return_val_if_true(from > to, false);
 
-	iter = clazz->private->head;
+	iter = clazz->private->head->next;
 
 	for (int i = 0; i < to; i++) {
 		coo_return_val_if_true(iter == NULL, false);
